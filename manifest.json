@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_name__",
+  "description": "__MSG_description__",
+  "default_locale": "en",
+  "version": "1.0.0",
+  "background": {
+    "scripts": [
+      "/js/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "/js/injector.js"
+      ],
+      "matches": [
+        "https://*.threads.net/*"
+      ],
+      "css": [
+        "/css/interface.css"
+      ],
+      "all_frames": true
+    }
+  ],
+  "permissions": [
+    "downloads"
+  ],
+  "icons": {
+    "128": "/icons/icon_128.png"
+  },
+  "browser_action": {
+    "default_title": "__MSG_name__",
+    "default_icon": "/icons/icon_128.png"
+  }
+}

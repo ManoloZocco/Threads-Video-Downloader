@@ -1,0 +1,11 @@
+{
+  "name": {
+    "message": "Threads Video Downloader"
+  },
+  "description": {
+    "message": "Download photos and videos from Threads quickly and easily!"
+  },
+  "btn_title": {
+    "message": "Download"
+  }
+}
