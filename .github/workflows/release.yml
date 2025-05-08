@@ -1,0 +1,34 @@
+name: Build and Attach Extension Packages
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-attach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create ZIP package
+        run: |
+          zip -r threads-video-downloader-${{ github.ref_name }}.zip . -x '*.git*' '*.DS_Store' '.github*'
+
+      - name: Create XPI package
+        run: |
+          cp threads-video-downloader-${{ github.ref_name }}.zip threads-video-downloader-${{ github.ref_name }}.xpi
+
+      - name: Upload ZIP to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: threads-video-downloader-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload XPI to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: threads-video-downloader-${{ github.ref_name }}.xpi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
