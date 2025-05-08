@@ -1,3 +1,7 @@
+[![Versione](https://img.shields.io/github/v/release/ManoloZocco/Threads-Video-Downloader?label=versione)](https://github.com/ManoloZocco/Threads-Video-Downloader/releases)
+[![Licenza](https://img.shields.io/github/license/ManoloZocco/Threads-Video-Downloader)](LICENSE)
+[![Firefox Add-on](https://img.shields.io/amo/v/threads-video-downloader?label=Mozilla%20Add-ons)](https://addons.mozilla.org/it/firefox/addon/threads-video-downloader/)
+
 # Threads Video Downloader
 
 Scarica facilmente video e immagini da Threads.net e Threads.com!
