@@ -1,47 +1,62 @@
+// == Injector for Threads Video Downloader ==
 (() => {
-    const t = {
+    const domTools = {
         observeDom() {
-            let t = this;
-            document.querySelectorAll("video").forEach((e => {
-                let n = t.findRoot(e);
-                n.querySelector(".dw") || n.append(t.getBtn(e.src || null))
-            }));
-            document.querySelectorAll("img").forEach((e => {
-                if (!(e.width < 200 || e.height < 200 || e.parentElement.querySelector(".dw")))
-                    return e.parentElement.prepend(t.getBtn(e.src || null))
-            }))
+            document.querySelectorAll("video").forEach(video => {
+                const root = domTools.findRoot(video);
+                if (root && !root.querySelector(".dw")) {
+                    root.append(domTools.getBtn(video.src || null));
+                }
+            });
+            document.querySelectorAll("img").forEach(img => {
+                if (
+                    img.width >= 200 &&
+                    img.height >= 200 &&
+                    img.parentElement &&
+                    !img.parentElement.querySelector(".dw")
+                ) {
+                    img.parentElement.prepend(domTools.getBtn(img.src || null));
+                }
+            });
         },
-        getBtn(t) {
-            let e = document.createElement("button");
-            e.innerText = browser.i18n.getMessage("btn_title");
-            e.className = "dw";
-            let n = document.createElement("span");
-            return n.className = "icon", e.append(n),
-                e.setAttribute("src", t),
-                e.addEventListener("click", this.dw), e
+        getBtn(mediaUrl) {
+            const btn = document.createElement("button");
+            btn.innerText = browser.i18n.getMessage("btn_title");
+            btn.className = "dw";
+            const icon = document.createElement("span");
+            icon.className = "icon";
+            btn.append(icon);
+            btn.setAttribute("data-src", mediaUrl);
+            btn.addEventListener("click", domTools.handleDownload);
+            return btn;
         },
-        findRoot(t) {
-            let e = t.parentNode;
-            if (!e) return;
-            let n = e.querySelector("div[data-visualcompletion]");
-            return n || this.findRoot(e)
+        findRoot(element, depth = 0) {
+            // Limite di profondità per evitare ricorsione infinita
+            if (!element || depth > 10) return null;
+            const parent = element.parentNode;
+            if (!parent) return null;
+            const visualDiv = parent.querySelector("div[data-visualcompletion]");
+            return visualDiv || domTools.findRoot(parent, depth + 1);
         },
-        dw(t) {
-            t.preventDefault(), t.stopPropagation();
-            let e = "button" === t.target.nodeName.toLowerCase() ? t.target : t.target.parentElement,
-                n = e.hasAttribute("src") && e.getAttribute("src") || null;
-            n && browser.runtime.sendMessage({ action: "downloadFile", url: n })
+        handleDownload(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const btn = event.target.closest("button.dw");
+            const mediaUrl = btn && btn.getAttribute("data-src");
+            if (mediaUrl) {
+                browser.runtime.sendMessage({
+                    action: "downloadFile",
+                    url: mediaUrl
+                });
+            }
         }
     };
-    function e() {
-        let t = chrome.runtime.connect(),
-            n = !1,
-            o = setTimeout((function () {
-                t && (n = !0, t.disconnect()), e()
-            }), 295e3);
-        t.onDisconnect.addListener((function () {
-            n || (clearTimeout(o), e())
-        }))
-    }
-    e(), setInterval(t.observeDom.bind(t), 500)
+
+    // Usa MutationObserver invece di setInterval
+    const observer = new MutationObserver(() => {
+        domTools.observeDom();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    // Esegui subito all'avvio
+    domTools.observeDom();
 })();

@@ -3,7 +3,7 @@
   "name": "__MSG_name__",
   "description": "__MSG_description__",
   "default_locale": "en",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "background": {
     "scripts": [
       "/js/background.js"
@@ -15,7 +15,8 @@
         "/js/injector.js"
       ],
       "matches": [
-        "https://*.threads.net/*"
+        "https://*.threads.net/*",
+        "https://*.threads.com/*"
       ],
       "css": [
         "/css/interface.css"
@@ -32,5 +33,10 @@
   "browser_action": {
     "default_title": "__MSG_name__",
     "default_icon": "/icons/icon_128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{37bceaa2-ba8a-4807-b43d-73c03d4a8e1d}"
+    }
   }
 }
